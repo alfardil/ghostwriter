@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env.docker
+    ports:
+      - "8080:8080"
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: http --domain=${NGROK_DOMAIN} app:8080
+    ports:
+      - "4040:4040"
+    depends_on:
+      - app

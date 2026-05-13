@@ -13,3 +13,17 @@ dev *args:
 
 test *args:
     ./mvnw test
+
+# Docker
+docker-build:
+    docker build -t ghostwriter .
+
+docker-run:
+    docker run --env-file .env.docker -p 8080:8080 ghostwriter
+
+# Start app + ngrok via docker compose
+docker-up:
+    docker compose --env-file .env.docker up --build
+
+docker-down:
+    docker compose down

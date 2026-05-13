@@ -34,6 +34,7 @@ build/
 .vscode/
 
 .env
+.env.docker
 certs/
 
 node_modules

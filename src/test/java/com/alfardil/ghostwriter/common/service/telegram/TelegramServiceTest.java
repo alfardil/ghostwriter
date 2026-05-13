@@ -61,7 +61,7 @@ class TelegramServiceTest {
     Map<String, Object> body = bodyCaptor.getValue();
     assertThat(body.get("chat_id")).isEqualTo("123");
     assertThat(body.get("text")).isEqualTo("Hello!");
-    assertThat(body.get("parse_mode")).isEqualTo("MarkdownV2");
+    assertThat(body).doesNotContainKey("parse_mode");
   }
 
   @Test
