@@ -3,6 +3,7 @@ package com.alfardil.ghostwriter.common.db.repos.message;
 import com.alfardil.ghostwriter.common.db.models.message.Message;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,15 @@ public class MessageSqlRepository implements MessageRepository {
     this.client = client;
   }
 
+  private final RowMapper<Message> messageMapper = (rs, _) ->
+    Message.builder()
+      .id(rs.getString("id"))
+      .telegramId(rs.getString("telegramId"))
+      .userMessage(rs.getString("userMessage"))
+      .aiResponse(rs.getString("aiResponse"))
+      .createdAt(rs.getObject("createdAt", OffsetDateTime.class))
+      .build();
+
   @Override
   public void createMessage(Message message) {
     UUID id = UUID.randomUUID();
@@ -24,12 +34,13 @@ public class MessageSqlRepository implements MessageRepository {
       client
         .sql(
           """
-          INSERT INTO "Message" (id, "userMessage", "aiResponse")
-          VALUES (:id, :userMessage, :aiResponse)
+          INSERT INTO "Message" (id, "telegramId", "userMessage", "aiResponse")
+          VALUES (:id, :telegramId, :userMessage, :aiResponse)
           RETURNING "createdAt"
           """
         )
         .param("id", id)
+        .param("telegramId", message.getTelegramId())
         .param("userMessage", message.getUserMessage())
         .param("aiResponse", message.getAiResponse())
         .query((rs, rowNum) -> rs.getObject("createdAt", OffsetDateTime.class))
@@ -39,25 +50,52 @@ public class MessageSqlRepository implements MessageRepository {
 
   @Override
   public Message getMessageById(String id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException(
-      "Unimplemented method 'getMessageById'"
-    );
+    return client
+      .sql(
+        """
+        SELECT id, "telegramId", "userMessage", "aiResponse", "createdAt"
+        FROM "Message"
+        WHERE id = :id
+        """
+      )
+      .param("id", UUID.fromString(id))
+      .query(messageMapper)
+      .optional()
+      .orElse(null);
   }
 
   @Override
   public boolean updateMessage(Message message) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException(
-      "Unimplemented method 'updateMessage'"
-    );
+    int updatedRows = client
+      .sql(
+        """
+        UPDATE "Message"
+        SET
+          "userMessage" = :userMessage,
+          "aiResponse" = :aiResponse
+        WHERE id = :id
+        """
+      )
+      .param("userMessage", message.getUserMessage())
+      .param("aiResponse", message.getAiResponse())
+      .param("id", UUID.fromString(message.getId()))
+      .update();
+
+    return updatedRows > 0;
   }
 
   @Override
   public boolean deleteMessageById(String id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException(
-      "Unimplemented method 'deleteMessageById'"
-    );
+    int updatedRows = client
+      .sql(
+        """
+        DELETE FROM "Message"
+        WHERE id = :id
+        """
+      )
+      .param("id", UUID.fromString(id))
+      .update();
+
+    return updatedRows > 0;
   }
 }

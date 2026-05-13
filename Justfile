@@ -10,3 +10,6 @@ drop *args:
 
 dev *args:
     mvn spring-boot:run
+
+test *args:
+    ./mvnw test
