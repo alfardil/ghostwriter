@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS "Message" (
+  id UUID PRIMARY KEY NOT NULL,
+  "userMessage" TEXT NOT NULL,
+  "aiResponse" TEXT NOT NULL,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

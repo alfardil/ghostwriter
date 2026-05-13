@@ -7,3 +7,6 @@ migrate *args:
 # Drop local DB
 drop *args:
     dotenvx run -- ./mvnw flyway:clean -Dflyway.locations=filesystem:./db -Dflyway.cleanDisabled=false {{ args }}
+
+dev *args:
+    mvn spring-boot:run

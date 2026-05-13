@@ -1,13 +1,13 @@
 package com.alfardil.ghostwriter.common.db.repos.test;
 
-import com.alfardil.ghostwriter.common.db.models.Task.TaskStatus;
+import com.alfardil.ghostwriter.common.db.models.task.TaskStatus;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Component;
 
-@Component
+@Slf4j
 public class DatabaseTestRunner implements CommandLineRunner {
 
     private final JdbcClient jdbcClient;
@@ -18,7 +18,7 @@ public class DatabaseTestRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("testing db connection");
+        log.info("RUNNING DATABASE TEST");
 
         try {
             UUID testId = UUID.randomUUID();
