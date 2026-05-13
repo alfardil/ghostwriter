@@ -1,6 +1,6 @@
 package com.alfardil.ghostwriter.common.db.repos.task;
 
-import com.alfardil.ghostwriter.common.db.models.Task.Task;
+import com.alfardil.ghostwriter.common.db.models.task.Task;
 
 public interface TaskRepository {
     void createTask(Task task);
