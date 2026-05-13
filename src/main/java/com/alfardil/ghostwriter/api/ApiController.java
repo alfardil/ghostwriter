@@ -14,39 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ApiController {
 
-    private static final Logger log = LoggerFactory.getLogger(
-        ApiController.class
+  private static final Logger log = LoggerFactory.getLogger(
+    ApiController.class
+  );
+
+  private final KafkaProducerService kafkaProducerService;
+
+  public ApiController(KafkaProducerService kafkaProducerService) {
+    this.kafkaProducerService = kafkaProducerService;
+  }
+
+  @PostMapping("/webhook")
+  public ResponseEntity<Void> handleTelegramWebhook(
+    @RequestBody TelegramUpdate update
+  ) {
+    if (update.getMessage() == null || update.getMessage().getText() == null) {
+      return ResponseEntity.ok().build();
+    }
+
+    String userId = String.valueOf(update.getMessage().getFrom().getId());
+    String text = update.getMessage().getText();
+
+    log.info(
+      "WEBHOOK HIT | updateId={} | userId={} | text='{}'",
+      update.getUpdateId(),
+      userId,
+      text
     );
 
-    private final KafkaProducerService kafkaProducerService;
+    kafkaProducerService.sendMessage(userId, text);
 
-    public ApiController(KafkaProducerService kafkaProducerService) {
-        this.kafkaProducerService = kafkaProducerService;
-    }
-
-    @PostMapping("/webhook")
-    public ResponseEntity<Void> handleTelegramWebhook(
-        @RequestBody TelegramUpdate update
-    ) {
-        if (
-            update.getMessage() == null || update.getMessage().getText() == null
-        ) {
-            System.out.println(update);
-            return ResponseEntity.ok().build();
-        }
-
-        String userId = String.valueOf(update.getMessage().getFrom().getId());
-        String text = update.getMessage().getText();
-
-        log.info(
-            "WEBHOOK HIT | updateId={} | userId={} | text='{}'",
-            update.getUpdateId(),
-            userId,
-            text
-        );
-
-        kafkaProducerService.sendMessage(userId, text);
-
-        return ResponseEntity.ok().build();
-    }
+    return ResponseEntity.ok().build();
+  }
 }

@@ -13,6 +13,7 @@ public class TelegramService {
   private static final Logger log = LoggerFactory.getLogger(
     TelegramService.class
   );
+  private static final String PARSE_MODE = "MarkdownV2";
 
   private final RestClient restClient;
 
@@ -33,7 +34,7 @@ public class TelegramService {
         "text",
         text,
         "parse_mode",
-        "Markdown"
+        PARSE_MODE
       );
 
       restClient

@@ -1,8 +1,7 @@
 package com.alfardil.ghostwriter.common.db.models.message;
 
-import java.time.OffsetDateTime;
-
 import com.alfardil.ghostwriter.common.db.helper.annotations.NotNullColumn;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,15 +15,18 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Message {
 
-    @NotNullColumn
-    private String id;
+  @NotNullColumn
+  private String id;
 
-    @NotNullColumn
-    private String userMessage;
+  @NotNullColumn
+  private String telegramId;
 
-    @NotNullColumn
-    private String aiResponse;
+  @NotNullColumn
+  private String userMessage;
 
-    @NotNullColumn
-    private OffsetDateTime createdAt;
+  @NotNullColumn
+  private String aiResponse;
+
+  @NotNullColumn
+  private OffsetDateTime createdAt;
 }
