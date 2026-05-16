@@ -39,7 +39,7 @@ jobs:
           KEY_STORE_TYPE: PEM
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: ./mvnw test
+        run: mvn test
 
   migrate:
     needs: test
@@ -62,4 +62,4 @@ jobs:
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        run: ./mvnw flyway:migrate -Dflyway.locations=filesystem:./db
+        run: mvn flyway:migrate -Dflyway.locations=filesystem:./db
