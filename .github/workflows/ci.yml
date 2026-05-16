@@ -32,6 +32,15 @@ jobs:
           distribution: "temurin"
           cache: maven
 
+      - name: Apply Flyway migrations to test DB
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_NAME: ghostwriter
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+        run: mvn flyway:migrate -Dflyway.locations=filesystem:./db
+
       - name: Run tests
         run: mvn clean verify
 
