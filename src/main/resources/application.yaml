@@ -30,9 +30,9 @@ spring:
     security:
       protocol: ${SECURITY_PROTOCOL}
     ssl:
-      trust-store-location: "file:${TRUST_STORE_LOCATION}"
+      trust-store-location: ${TRUST_STORE_LOCATION}
       trust-store-type: ${TRUST_STORE_TYPE}
-      key-store-location: "file:${KEY_STORE_LOCATION}"
+      key-store-location: ${KEY_STORE_LOCATION}
       key-store-type: ${KEY_STORE_TYPE}
 
 app:

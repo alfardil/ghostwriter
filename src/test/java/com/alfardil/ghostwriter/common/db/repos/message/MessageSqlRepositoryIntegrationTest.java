@@ -11,8 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@EmbeddedKafka(partitions = 1, topics = {"task", "reply"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MessageSqlRepositoryIntegrationTest {
 

@@ -2,13 +2,26 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ghostwriter
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -19,27 +32,8 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Write Kafka certs
-        run: |
-          echo "${{ secrets.KAFKA_CA_PEM }}" > ca.pem
-          echo "${{ secrets.KAFKA_SVC_PEM }}" > svc.pem
-
       - name: Run tests
-        env:
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          KAFKA_SERVER: ${{ secrets.KAFKA_SERVER }}
-          SECURITY_PROTOCOL: SSL
-          TRUST_STORE_LOCATION: ${{ github.workspace }}/ca.pem
-          TRUST_STORE_TYPE: PEM
-          KEY_STORE_LOCATION: ${{ github.workspace }}/svc.pem
-          KEY_STORE_TYPE: PEM
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: mvn test
+        run: mvn clean verify
 
   migrate:
     needs: test
