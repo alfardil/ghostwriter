@@ -1,13 +1,11 @@
 spring:
-  kafka:
-    security:
-      protocol: PLAINTEXT # no ssl in test
-    ssl:
-      trust-store-location:
-      trust-store-type:
-      key-store-location:
-      key-store-type:
+  flyway:
+    enabled: true
+    locations: filesystem:./db/migration
+    clean-disabled: false
 
+# Env-var fallbacks for when .env is absent (e.g., CI).
+# Locally, .env wins for these.
 DATABASE_HOST: localhost
 DATABASE_PORT: 5432
 DATABASE_NAME: ghostwriter
@@ -15,9 +13,4 @@ DATABASE_USER: postgres
 DATABASE_PASSWORD: postgres
 GEMINI_API_KEY: test-key
 TELEGRAM_BOT_TOKEN: test-token
-SECURITY_PROTOCOL: PLAINTEXT
 KAFKA_SERVER: localhost:9092
-TRUST_STORE_LOCATION: /dev/null
-TRUST_STORE_TYPE: PEM
-KEY_STORE_LOCATION: /dev/null
-KEY_STORE_TYPE: PEM
